@@ -1,4 +1,4 @@
 export const reverseStr = (input) => {
-	if (typeof input !== 'string') return target;
-	return input.split('').reverse().join('');
-}
+    if (typeof input !== 'string') return input;
+    return input.split('').reverse().join('');
+};
