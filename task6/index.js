@@ -1,21 +1,28 @@
 import express from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 import userRouter from './routers/user';
 import groupRouter from './routers/group';
 import userGroupRouter from './routers/userGroup';
 import errorHandlerMiddleware from './middlewares/error-handler';
+import jwtMiddleware from './middlewares/jwt';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cors());
+app.use(jwtMiddleware);
+
+
 morgan.token('body', (req) => JSON.stringify(req.body));
 morgan.token('params', (req) => JSON.stringify(req.params));
 app.use(morgan(':method :url :status :params :body'));
+
+
 app.use('/user', userRouter);
 app.use('/group', groupRouter);
 app.use('/user-group', userGroupRouter);
-
 app.use(errorHandlerMiddleware);
 
 app.listen(port, () => {

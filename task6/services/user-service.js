@@ -1,4 +1,6 @@
+import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
+import config from '../config';
 import { User } from '../data-access';
 
 class UserService {
@@ -50,6 +52,20 @@ class UserService {
             },
             limit
         });
+    }
+
+    async login(username, password) {
+        const existedUser = await User.findOne({
+            where: {
+                login: username,
+                isDeleted: false
+            }
+        });
+        if (existedUser?.password === password) {
+            const token = jwt.sign({ ...existedUser, password: undefined }, config.jwtSecret, { expiresIn: config.jwtTokenExpire });
+            return token;
+        }
+        return false;
     }
 }
 

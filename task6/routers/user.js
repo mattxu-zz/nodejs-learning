@@ -88,4 +88,19 @@ userRouter.get('/auto-suggest/:loginSubstring/:limit', async (req, res) => {
     }
 });
 
+userRouter.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const token = await userService.login(username, password);
+        if (!token) {
+            res.status(400).send('User name or password not correct');
+        } else {
+            res.send(token);
+        }
+    } catch (error) {
+        logMethodError('userService.login', [username, password], error);
+        res.status(400).send(error);
+    }
+});
+
 export default userRouter;
